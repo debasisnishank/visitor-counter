@@ -1,0 +1,24 @@
+#!/bin/sh
+# Strip machine-generated attribution trailers from commit messages.
+#
+# Commits in this repository are authored by Debasis Nishank. Some tooling
+# appends co-author trailers or "generated with" footers; this removes them
+# before the commit is written, regardless of what that tooling was told.
+#
+# Patterns are anchored to whole trailer lines, and the co-author form requires
+# an <email>, so prose that merely mentions these strings survives intact.
+# Legitimate human co-authors are preserved.
+#
+# Active only when core.hooksPath is set. A fresh clone re-enables it with:
+#   git config core.hooksPath .githooks
+
+perl -0pi -e '
+  # Co-authored-by: Claude ... <someone@somewhere>   (email required)
+  s/^[ \t]*Co-authored-by:[ \t]*(?:Claude|Anthropic)\b[^\n]*<[^>\n]*>[ \t]*\r?\n?//gmi;
+  # Claude-Session: / Claude-Model: / Claude-Version: <value>
+  s/^[ \t]*Claude-[A-Za-z]+:[ \t]*\S+[ \t]*\r?\n?//gmi;
+  # [emoji] Generated with [Claude Code](...)  — only as its own line
+  s/^[^\w\n]{0,4}[ \t]*Generated with[ \t]*\[?Claude(?:[ \t]*Code)?\]?[^\n]*\r?\n?//gmi;
+  s/\n{3,}/\n\n/g;
+  s/\s+\z/\n/;
+' "$1"

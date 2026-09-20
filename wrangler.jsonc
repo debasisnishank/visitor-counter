@@ -1,0 +1,10 @@
+{
+  "name": "visitor-counter",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "account_id": "450e8d7400e0c51e837b6a6487b351f0",
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    { "binding": "COUNTER", "id": "f20e0948f927498c8cef81ef6c604ac1" }
+  ]
+}
