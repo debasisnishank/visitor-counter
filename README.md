@@ -11,11 +11,16 @@ CORS is restricted to those two origins.
 
 ## Privacy
 
-The visitor's IP is never stored. It is combined with the user agent, the
-date and a server-side salt, hashed with SHA-256, and only that hash is kept
-— as a marker with a 24 hour TTL meaning "already counted today". So the
-number is daily unique visitors rather than a refresh-inflated hit count, and
-nothing identifying is retained. No cookies, so no consent banner.
+The visitor's IP is never stored. It is combined with the date and a
+server-side salt, hashed with SHA-256, and only that hash is kept — as a
+marker with a 24 hour TTL meaning "already counted today". So the number is
+daily unique visitors rather than a refresh-inflated hit count, and nothing
+identifying is retained. No cookies, so no consent banner.
+
+The fingerprint deliberately excludes the User-Agent. Including it let a
+single client inflate the count just by varying a header it controls; the IP,
+set by Cloudflare's edge, is the only input a caller cannot trivially forge.
+The trade is that visitors sharing an IP count once between them.
 
 ## Deploy
 

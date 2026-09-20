@@ -4,11 +4,18 @@
  * Both sites are static on GitHub Pages, so there is nowhere to keep a count.
  * This Worker holds it in KV and hands it back over CORS.
  *
- * Privacy: the visitor's IP is never stored. It is combined with the user
- * agent, the date and a server-side salt, hashed, and the hash is kept only
- * as a 24h "already counted today" marker. That gives daily unique visitors
- * rather than a refresh-inflated hit count, without retaining anything that
- * identifies anyone.
+ * Privacy: the visitor's IP is never stored. It is combined with the date and
+ * a server-side salt, hashed, and the hash is kept only as a 24h "already
+ * counted today" marker. That gives daily unique visitors rather than a
+ * refresh-inflated hit count, without retaining anything that identifies
+ * anyone.
+ *
+ * The fingerprint deliberately excludes the User-Agent. It used to include it,
+ * which meant a single client could inflate the count freely just by varying a
+ * header it controls. IP alone is the only input here the caller cannot
+ * trivially forge. The trade is that visitors sharing an IP — an office, a
+ * mobile carrier's CGNAT — count once between them; under-counting a shared
+ * network is much the lesser problem.
  */
 
 const ALLOWED_ORIGINS = new Set([
@@ -65,8 +72,8 @@ export default {
 
     const fp = await fingerprint([
       site,
+      // Set by Cloudflare's edge; not something the caller can spoof.
       request.headers.get('CF-Connecting-IP') ?? '',
-      request.headers.get('User-Agent') ?? '',
       new Date().toISOString().slice(0, 10),
       env.SALT ?? 'fallback-salt',
     ]);
