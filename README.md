@@ -1,13 +1,17 @@
 # visitor-counter
 
-Cloudflare Worker backing the visible visitor counts on
-`debasisnishank.com` and `signals.debasisnishank.com`. Both sites are static
-on GitHub Pages, so the count lives in Workers KV.
+Cloudflare Worker backing the visible visitor count on
+`signals.debasisnishank.com`. The site is static on GitHub Pages, so the
+count lives in Workers KV.
 
-    GET /?site=portfolio        increment (once per visitor per day) and return
+    GET /?site=signals          increment (once per visitor per day) and return
     GET /?site=signals&peek=1   return the count without claiming a visit
 
-CORS is restricted to those two origins.
+CORS is restricted to that origin.
+
+The portfolio used to call this as well. A visible count suits a links page,
+not the site someone reads before deciding whether to hire you, so it was
+removed there and this no longer accepts that origin.
 
 ## Privacy
 

@@ -1,8 +1,13 @@
 /**
- * Visitor counter for debasisnishank.com and signals.debasisnishank.com.
+ * Visitor counter for signals.debasisnishank.com.
  *
- * Both sites are static on GitHub Pages, so there is nowhere to keep a count.
+ * The site is static on GitHub Pages, so there is nowhere to keep a count.
  * This Worker holds it in KV and hands it back over CORS.
+ *
+ * The portfolio used to call this too. A visible count belongs on a links page,
+ * not on the site someone reads to decide whether to hire you — a small number
+ * there works against you and tells you nothing you would act on. It was
+ * removed rather than left switched off, so this no longer accepts that origin.
  *
  * Privacy: the visitor's IP is never stored. It is combined with the date and
  * a server-side salt, hashed, and the hash is kept only as a 24h "already
@@ -18,14 +23,10 @@
  * network is much the lesser problem.
  */
 
-const ALLOWED_ORIGINS = new Set([
-  'https://debasisnishank.com',
-  'https://www.debasisnishank.com',
-  'https://signals.debasisnishank.com',
-]);
+const ALLOWED_ORIGINS = new Set(['https://signals.debasisnishank.com']);
 
 // Named sites, so an open endpoint can't be used to spin up arbitrary keys.
-const SITES = new Set(['portfolio', 'signals']);
+const SITES = new Set(['signals']);
 
 const DAY_SECONDS = 86400;
 
